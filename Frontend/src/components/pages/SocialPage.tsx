@@ -12,16 +12,35 @@ interface Video {
 const SocialPage = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    axios
-      .get(`${API_BASE_URL}/api/social/youtube`)
-      .then((res) => {
-        if (Array.isArray(res.data)) setVideos(res.data);
-        else console.warn('Unexpected response:', res.data);
-      })
-      .catch((err) => console.error('Failed to fetch videos:', err))
-  }, []);
+  const fetchVideos = async () => {
+    try {
+      const res = await axios.get<Video[]>(`${API_BASE_URL}/api/social/youtube`);
+      setVideos(res.data);
+    } catch (err) {
+      console.error("Failed to fetch videos:", err);
+      setVideos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchVideos();
+}, []);
+
+
+
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`${API_BASE_URL}/api/social/youtube`)
+  //     .then((res) => {
+  //       if (Array.isArray(res.data)) setVideos(res.data);
+  //       else console.warn('Unexpected response:', res.data);
+  //     })
+  //     .catch((err) => console.error('Failed to fetch videos:', err))
+  // }, []);
+  
 
   return (
     <div className="min-h-screen px-6 py-10 pb-32 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
