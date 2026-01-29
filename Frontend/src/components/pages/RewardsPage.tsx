@@ -164,9 +164,9 @@ const achievementRate = Math.round(
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {availableBadges.map(badge => (
-              <div
-                key={badge._id}
+            {availableBadges.map((badge, index) => (
+  <div key={`available-${index}`}
+
                 className="bg-gray-50 p-4 rounded-xl border-2 border-gray-200"
               >
                 <div className="flex items-center gap-4">

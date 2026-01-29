@@ -41,6 +41,59 @@ function TypingDots() {
 
 /* ---------- Component ---------- */
 
+async function buildUserContext() {
+  const transactions = await storage.getTransactions();
+  const balance = Number(await storage.getBalance()) || 0;
+  const goals = await storage.getSavingsGoals();
+
+  const totalIncome = transactions
+    .filter(t => t.type === "income")
+    .reduce((s, t) => s + t.amount, 0);
+
+  const totalExpenses = transactions
+    .filter(t => t.type === "expense")
+    .reduce((s, t) => s + t.amount, 0);
+
+  const categoryMap: Record<string, number> = {};
+  transactions
+    .filter(t => t.type === "expense")
+    .forEach(t => {
+      categoryMap[t.category || "other"] =
+        (categoryMap[t.category || "other"] || 0) + t.amount;
+    });
+
+  const sortedCategories = Object.entries(categoryMap).sort((a, b) => b[1] - a[1]);
+
+  const activeDays = new Set(
+    transactions.map(t => new Date(t.date).toDateString())
+  ).size;
+
+  return {
+    balance,
+    totalIncome,
+    totalExpenses,
+    savingsRate:
+      totalIncome > 0
+        ? Math.round(((totalIncome - totalExpenses) / totalIncome) * 100)
+        : 0,
+
+    transactionCount: transactions.length,
+    activeDays,
+
+    topExpenseCategory: sortedCategories[0]?.[0] || null,
+    topExpenseAmount: sortedCategories[0]?.[1] || 0,
+
+    goalsCount: goals.length,
+
+    flags: {
+      overspending: totalExpenses > totalIncome,
+      lowSavings: totalIncome > 0 && (totalIncome - totalExpenses) / totalIncome < 0.2,
+      inactiveUser: activeDays < 3
+    }
+  };
+}
+
+
 export default function Chatbot() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<
@@ -140,7 +193,9 @@ export default function Chatbot() {
     setLoading(true);
     setMessages(prev => [...prev, { user: transcript }]);
 
-    const reply = await sendChatMessage(transcript);
+    const context = await buildUserContext();
+const reply = await sendChatMessage(transcript, context);
+
 
     setMessages(prev => [...prev, { bot: reply }]);
     setLoading(false);
@@ -155,7 +210,9 @@ export default function Chatbot() {
 
     setMessages(prev => [...prev, { user: userMsg }]);
 
-    const reply = await sendChatMessage(userMsg);
+    const context = await buildUserContext();
+const reply = await sendChatMessage(userMsg, context);
+
 
     setMessages(prev => [...prev, { bot: reply }]);
     setLoading(false);
