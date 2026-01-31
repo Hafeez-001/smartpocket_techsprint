@@ -81,6 +81,12 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       {renderPage()}
 
+      {/* {username && (
+        <>
+          <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+          <FloatingAssistant />
+        </>
+      )} */}
       {username && (
         <>
           <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
