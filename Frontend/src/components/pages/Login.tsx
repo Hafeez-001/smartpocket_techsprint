@@ -32,7 +32,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onPageChange }) =>
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-pink-500 to-blue-400 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 p-4">
       {/* Logo & Branding */}
       <div className="flex flex-col items-center mb-8">
         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg mb-3">
@@ -45,6 +45,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess, onPageChange }) =>
           </span> */}
         </h1>
         <p color='white'>Speak. Save. Succeed.</p>
+        <p color='white'>Made by Teens! For Teens!</p>
       </div>
 
       {/* Login Form */}

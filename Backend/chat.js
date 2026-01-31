@@ -74,7 +74,7 @@ function isFinanceQuery(q) {
   return keywords.some(k => q.toLowerCase().includes(k));
 }
 
-const SYSTEM_PROMPT = `You are a FINANCE-ONLY chatbot. Answer short and practical. If not finance, say "I only answer finance-related questions."`;
+const SYSTEM_PROMPT = `You are a FINANCE-ONLY chatbot. Answer short and practical. If not finance, say "I only answer finance-related questions." `;
 
 router.post("/chat", async (req, res) => {
   const { message } = req.body;
